@@ -1,10 +1,10 @@
-"""Predict the onset of diabetes based on diagnostic measures"""
-
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, Imputer
+from sklearn.svm import SVC
 
 df = pd.read_csv('diabetes.csv')
 
@@ -14,20 +14,24 @@ assert df.isnull().sum().all() == 0
 features = df.drop('Outcome', axis=1)
 target = df['Outcome']
 
+steps = [('imputation', Imputer(missing_values=0, strategy='mean', axis=0)),
+         ('scaler', StandardScaler()),
+         ('SVM', SVC(C=1.0, gamma=0.01))]
+
+# Create the pipeline: pipeline
+pipeline = Pipeline(steps)
+
 # Create training and test set
 X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.4, random_state=42)
 
-# Instantiate a k-NN classifier: knn
-knn = KNeighborsClassifier(n_neighbors=7)
+# Fit to the training set
+pipeline.fit(X_train, y_train)
 
-# Fit the classifier to the training data
-knn.fit(X_train, y_train)
+# Predict the labels of the test set: y_pred
+y_pred = pipeline.predict(X_test)
 
-# Predict the labels of the test data: y_pred
-y_pred = knn.predict(X_test)
-
-# Generate the confusion matrix and classification report
-print(confusion_matrix(y_test, y_pred))
+# Compute and print metrics
+print("Accuracy: {}".format(pipeline.score(X_test, y_test)))
 print(classification_report(y_test, y_pred))
 
 # Find the important features
