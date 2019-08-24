@@ -1,9 +1,10 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, Imputer
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
 df = pd.read_csv('diabetes.csv')
@@ -14,9 +15,10 @@ assert df.isnull().sum().all() == 0
 features = df.drop('Outcome', axis=1)
 target = df['Outcome']
 
-steps = [('imputation', Imputer(missing_values=0, strategy='mean', axis=0)),
-         ('scaler', StandardScaler()),
-         ('SVM', SVC(C=1.0, gamma=0.01))]
+steps = [
+    ('imputation', SimpleImputer(missing_values=0, strategy='mean')),
+    ('scaler', StandardScaler()),
+    ('SVM', SVC(C=1.0, gamma=0.01))]
 
 # Create the pipeline: pipeline
 pipeline = Pipeline(steps)
