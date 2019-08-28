@@ -24,7 +24,7 @@ steps = [
 pipeline = Pipeline(steps)
 
 # Create training and test set
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.4, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.5, random_state=42)
 
 # Fit to the training set
 pipeline.fit(X_train, y_train)
