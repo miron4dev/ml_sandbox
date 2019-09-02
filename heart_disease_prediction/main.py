@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
@@ -9,7 +8,6 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 
 from common.accuracy_calculator import calculate_accuracy
-from common.hyper_parameters_tuner import tune_hyper_parameters
 
 train_values = pd.read_csv('train_values.csv')
 train_labels = pd.read_csv('train_labels.csv')
@@ -36,7 +34,7 @@ pipeline = Pipeline([
 )
 
 # Create training and test set
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.25, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.3, random_state=42)
 
 # Fit to the training set
 pipeline.fit(X_train, y_train)
@@ -44,13 +42,6 @@ pipeline.fit(X_train, y_train)
 # Predict the labels of the test set: y_pred
 y_pred = pipeline.predict(X_test)
 y_pred_proba = pipeline.predict_proba(X_test)
-
-# Tune hyper parameters
-param_grid = {'logistic__penalty': ['l1', 'l2'],
-              'logistic__class_weight': ['balanced', None],
-              'logistic__C': np.logspace(-5, 8, 15)}
-
-tune_hyper_parameters(pipeline, param_grid, X_train, y_train)
 
 # Compute and print metrics
 calculate_accuracy(y_test, y_pred)
