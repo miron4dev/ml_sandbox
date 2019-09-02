@@ -1,14 +1,14 @@
 from sklearn.model_selection import GridSearchCV
 
 
-def tune(estimator, tuned_parameters, X_train, y_train):
+def tune_hyper_parameters(estimator, param_grid, X_train, y_train):
     scores = ['precision', 'recall']
 
     for score in scores:
         print("# Tuning hyper-parameters for %s" % score)
         print()
 
-        clf = GridSearchCV(estimator, tuned_parameters, cv=5, scoring='%s_macro' % score)
+        clf = GridSearchCV(estimator, param_grid, cv=5, scoring='%s_macro' % score)
         clf.fit(X_train, y_train)
 
         print("Best parameters set found on development set:")

@@ -6,7 +6,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 
-def estimate(X_train, y_train, X_test, y_test):
+def estimate_classifiers(X_train, y_train, X_test, y_test):
     abc = []
     classifiers = ['Linear Svm', 'Radial Svm', 'Logistic Regression', 'KNN', 'Decision Tree']
     models = [SVC(kernel='linear'), SVC(kernel='rbf'), LogisticRegression(), KNeighborsClassifier(n_neighbors=3),

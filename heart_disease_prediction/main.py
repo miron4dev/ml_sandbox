@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
@@ -8,6 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 
 from common.accuracy_calculator import calculate_accuracy
+from common.hyper_parameters_tuner import tune_hyper_parameters
 
 train_values = pd.read_csv('train_values.csv')
 train_labels = pd.read_csv('train_labels.csv')
@@ -30,7 +32,7 @@ target = df['heart_disease_present']
 pipeline = Pipeline([
     ('imputation', SimpleImputer(missing_values=0, strategy='mean')),
     ('scaler', StandardScaler()),
-    ('logistic', LogisticRegression(C=1.0, penalty='l1', solver='liblinear'))]
+    ('logistic', LogisticRegression(C=0.4393970560760795, penalty='l1', class_weight='balanced', solver='liblinear'))]
 )
 
 # Create training and test set
@@ -42,6 +44,13 @@ pipeline.fit(X_train, y_train)
 # Predict the labels of the test set: y_pred
 y_pred = pipeline.predict(X_test)
 y_pred_proba = pipeline.predict_proba(X_test)
+
+# Tune hyper parameters
+param_grid = {'logistic__penalty': ['l1', 'l2'],
+              'logistic__class_weight': ['balanced', None],
+              'logistic__C': np.logspace(-5, 8, 15)}
+
+tune_hyper_parameters(pipeline, param_grid, X_train, y_train)
 
 # Compute and print metrics
 calculate_accuracy(y_test, y_pred)
