@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
@@ -10,9 +11,10 @@ from sklearn.tree import DecisionTreeClassifier
 
 def estimate_classifiers(X_train, y_train, X_test, y_test):
     abc = []
-    classifiers = ['Linear Svm', 'Radial Svm', 'Logistic Regression', 'KNN', 'Decision Tree', 'Random Forest']
+    classifiers = ['Linear Svm', 'Radial Svm', 'Logistic Regression', 'KNN', 'Decision Tree', 'Random Forest',
+                   'Naive Bayes', 'SGD']
     models = [SVC(kernel='linear'), SVC(kernel='rbf'), LogisticRegression(), KNeighborsClassifier(n_neighbors=3),
-              DecisionTreeClassifier(), RandomForestClassifier()]
+              DecisionTreeClassifier(), RandomForestClassifier(), MultinomialNB(), SGDClassifier(max_iter=1000, loss='log')]
     for i in models:
         model = i
         model.fit(X_train, y_train)
